@@ -1,17 +1,10 @@
 #include "GameApp.hpp"
+#include "Events.hpp"
 #include <SFML/Graphics.hpp>
 #include <map>
 #include <iostream>
 #include "GameManager/GameManager.hpp"
 #include "UIManager/UIManager.hpp"
-
-struct MapConfig {
-    std::string name;
-    std::string backgroundPath;
-    int maxStations;
-    int maxLines;
-    float stationSpawnDelay;
-};
 
 int GameApp::run(const std::string& mapName)
 {
@@ -36,34 +29,7 @@ int GameApp::run(const std::string& mapName)
     ui.loadBackground(config.backgroundPath, window, config.name);
 
     while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
-                window.close();
-
-            if (!_isPaused) {
-                if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
-                    sf::Vector2f pos = window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y });
-                    game.handleMousePressed(pos);
-                }
-
-                if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
-                    sf::Vector2f pos = window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y });
-                    game.handleMouseReleased(pos);
-                }
-            }
-
-            if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
-                sf::Vector2f pos = window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y });
-                if (ui.isClickOnMenu(pos)) {
-                    _isPaused = !_isPaused;
-                }
-            }
-
-            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape && _isPaused) {
-                _isPaused = false;
-            }
-        }
+        handleEvents(window, game, ui, _isPaused);
 
         if (!_isPaused) {
             game.update();
