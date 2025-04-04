@@ -7,8 +7,11 @@ INC_DIR = include
 BUILD_DIR = build
 
 SRCS = $(SRC_DIR)/main.cpp \
+       $(SRC_DIR)/Station/Station.cpp \
+       $(SRC_DIR)/UIManager/game_window.cpp \
        $(SRC_DIR)/UIManager/UIManager.cpp \
-       $(SRC_DIR)/Station/Station.cpp
+       $(SRC_DIR)/UIManager/menu.cpp \
+
 
 OBJS = $(SRCS:.cpp=.o)
 
