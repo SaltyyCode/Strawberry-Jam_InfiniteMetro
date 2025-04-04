@@ -1,20 +1,20 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "../Station/Station.hpp"
+#include <vector>
+#include <set>
 
 class Line {
-    public:
-        Line(size_t startIndex, size_t endIndex, sf::Color color);
-    
-        void render(sf::RenderWindow& window, const std::vector<Station>& stations) const;
-    
-        size_t getStartIndex() const;
-        size_t getEndIndex() const;
-        sf::Color getColor() const;
-    
-    private:
-        size_t _startIndex;
-        size_t _endIndex;
-        sf::Color _color;
-    };
-    
+public:
+    Line(sf::Color color);
+
+    void addConnection(size_t a, size_t b);
+    bool hasConnection(size_t a, size_t b) const;
+    void render(sf::RenderWindow& window, const std::vector<class Station>& stations) const;
+    const std::vector<std::pair<size_t, size_t>>& getConnections() const;
+    bool canAddConnection(size_t maxStations) const;
+    sf::Color getColor() const;
+
+private:
+    sf::Color _color;
+    std::vector<std::pair<size_t, size_t>> _connections;
+};

@@ -1,32 +1,48 @@
 #include "Line.hpp"
+#include "../Station/Station.hpp"
+#include <algorithm>
 
-Line::Line(size_t startIndex, size_t endIndex, sf::Color color)
-    : _startIndex(startIndex), _endIndex(endIndex), _color(color) {}
+Line::Line(sf::Color color) : _color(color) {}
 
-void Line::render(sf::RenderWindow& window, const std::vector<Station>& stations) const
-{
-    if (_startIndex >= stations.size() || _endIndex >= stations.size())
-        return;
-
-    sf::Vertex line[] = {
-        sf::Vertex(stations[_startIndex].getPosition(), _color),
-        sf::Vertex(stations[_endIndex].getPosition(), _color)
-    };
-
-    window.draw(line, 2, sf::Lines);
+void Line::addConnection(size_t a, size_t b) {
+    if (!hasConnection(a, b))
+        _connections.emplace_back(a, b);
 }
 
-sf::Color Line::getColor() const
-{
+bool Line::hasConnection(size_t a, size_t b) const {
+    return std::any_of(_connections.begin(), _connections.end(), [&](const auto& p) {
+        return (p.first == a && p.second == b) || (p.first == b && p.second == a);
+    });
+}
+
+sf::Color Line::getColor() const {
     return _color;
 }
 
-size_t Line::getStartIndex() const
+void Line::render(sf::RenderWindow& window, const std::vector<Station>& stations) const
 {
-    return _startIndex;
+    for (auto& [iA, iB] : _connections) {
+        if (iA >= stations.size() || iB >= stations.size()) continue;
+
+        sf::Vertex line[] = {
+            sf::Vertex(stations[iA].getPosition(), _color),
+            sf::Vertex(stations[iB].getPosition(), _color)
+        };
+        window.draw(line, 2, sf::Lines);
+    }
 }
 
-size_t Line::getEndIndex() const
+const std::vector<std::pair<size_t, size_t>>& Line::getConnections() const
 {
-    return _endIndex;
+    return _connections;
+}
+
+bool Line::canAddConnection(size_t maxStations) const
+{
+    std::set<size_t> uniqueStations;
+    for (auto& [a, b] : _connections) {
+        uniqueStations.insert(a);
+        uniqueStations.insert(b);
+    }
+    return uniqueStations.size() < maxStations;
 }
