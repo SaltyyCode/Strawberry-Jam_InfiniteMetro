@@ -27,13 +27,22 @@ void Line::render(sf::RenderWindow& window, const std::vector<Station>& stations
     for (auto& [iA, iB] : _connections) {
         if (iA >= stations.size() || iB >= stations.size()) continue;
 
-        sf::Vertex line[] = {
-            sf::Vertex(stations[iA].getPosition(), _color),
-            sf::Vertex(stations[iB].getPosition(), _color)
-        };
-        window.draw(line, 2, sf::Lines);
+        sf::Vector2f posA = stations[iA].getPosition();
+        sf::Vector2f posB = stations[iB].getPosition();
+        sf::Vector2f diff = posB - posA;
+
+        float length = std::hypot(diff.x, diff.y);
+        float angle = std::atan2(diff.y, diff.x) * 180.f / 3.14159f;
+
+        sf::RectangleShape line(sf::Vector2f(length, 5.f));
+        line.setPosition(posA);
+        line.setRotation(angle);
+        line.setFillColor(_color);
+
+        window.draw(line);
     }
 }
+
 
 const std::vector<std::pair<size_t, size_t>>& Line::getConnections() const
 {
