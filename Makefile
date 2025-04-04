@@ -6,6 +6,7 @@ BUILD_DIR = build
 
 SRCS = $(SRC_DIR)/main.cpp \
 	   $(SRC_DIR)/GameApp.cpp \
+	   $(SRC_DIR)/Events.cpp \
        $(SRC_DIR)/UIManager/UIManager.cpp \
        $(SRC_DIR)/Station/Station.cpp \
 	   $(SRC_DIR)/GameManager/GameManager.cpp \
