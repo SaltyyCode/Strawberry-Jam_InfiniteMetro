@@ -33,32 +33,45 @@ int GameApp::run(const std::string& mapName)
 
     GameManager game(config.maxStations, config.stationSpawnDelay, config.maxLines);
     UIManager ui;
-    ui.loadBackground(config.backgroundPath, window);
+    ui.loadBackground(config.backgroundPath, window, config.name);
 
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed || 
-                (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) {
+            if (event.type == sf::Event::Closed)
                 window.close();
+
+            if (!_isPaused) {
+                if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+                    sf::Vector2f pos = window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y });
+                    game.handleMousePressed(pos);
+                }
+
+                if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
+                    sf::Vector2f pos = window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y });
+                    game.handleMouseReleased(pos);
+                }
             }
 
             if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
                 sf::Vector2f pos = window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y });
-                game.handleMousePressed(pos);
+                if (ui.isClickOnMenu(pos)) {
+                    _isPaused = !_isPaused;
+                }
             }
 
-            if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
-                sf::Vector2f pos = window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y });
-                game.handleMouseReleased(pos);
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape && _isPaused) {
+                _isPaused = false;
             }
         }
 
-        game.update();
-        game.updateStations();
+        if (!_isPaused) {
+            game.update();
+            game.updateStations();
+        }
 
         window.clear(sf::Color::Black);
-        ui.render(window, game.getStations(), game.getMetroLines(), game.getSelectedLineIndex());
+        ui.render(window, game.getStations(), game.getMetroLines(), game.getSelectedLineIndex(), _isPaused);
         window.display();
     }
 
