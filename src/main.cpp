@@ -17,12 +17,26 @@ int main()
                 (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) {
                 window.close();
             }
+        
+            if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
+                sf::Vector2f pos = window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y });
+                game.handleMousePressed(pos);
+            }
+        
+            if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
+                sf::Vector2f pos = window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y });
+                game.handleMouseReleased(pos);
+            }
         }
 
         game.update();
         game.updateStations();
         window.clear(sf::Color::White);
-        ui.render(window, game.getStations());
+        ui.render(window, game.getStations(), game.getLines());
+        sf::Vector2i mousePixel = sf::Mouse::getPosition(window);
+        sf::Vector2f mouseWorld = window.mapPixelToCoords(mousePixel);
+        game.renderLinePreview(window, mouseWorld);
+
         window.display();
     }
 
