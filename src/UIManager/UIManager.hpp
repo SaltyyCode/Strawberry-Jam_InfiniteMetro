@@ -5,11 +5,5 @@
 
 class UIManager {
 public:
-    UIManager(int stationCount = 3);
-    void render(sf::RenderWindow& window);
-
-private:
-    void generateInitialStations(int count);
-
-    std::vector<Station> _stations;
+    void render(sf::RenderWindow& window, const std::vector<Station>& stations);
 };
