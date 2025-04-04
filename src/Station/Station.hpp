@@ -21,6 +21,6 @@ class Station {
         sf::Vector2f _position;
         StationColor _color;
     
-        float _alpha; // 0 à 255
+        float _alpha;
     };
     

@@ -43,3 +43,8 @@ void Station::render(sf::RenderWindow& window) const
 
     window.draw(shape);
 }
+
+sf::Vector2f Station::getPosition() const
+{
+    return _position;
+}
