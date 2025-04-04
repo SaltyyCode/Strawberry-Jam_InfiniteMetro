@@ -12,8 +12,6 @@ void Station::update()
 void Station::render(sf::RenderWindow& window) const
 {
     sf::CircleShape shape;
-    sf::Color baseColor = getSFColorFromStationColor(_color);
-
     switch (_type) {
         case ROUND: shape.setRadius(20.f); shape.setPointCount(30); break;
         case SQUARE: shape.setRadius(20.f); shape.setPointCount(4); break;
@@ -22,8 +20,14 @@ void Station::render(sf::RenderWindow& window) const
 
     shape.setOrigin(shape.getRadius(), shape.getRadius());
     shape.setPosition(_position);
+
+    sf::Color baseColor = getSFColorFromStationColor(_color);
     baseColor.a = static_cast<sf::Uint8>(_alpha);
-    shape.setFillColor(baseColor);
+
+    shape.setFillColor(sf::Color(255, 255, 255, 0));
+    shape.setOutlineColor(baseColor);                
+    shape.setOutlineThickness(4.f);                  
+
     window.draw(shape);
 }
 
