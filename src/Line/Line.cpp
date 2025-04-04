@@ -4,18 +4,21 @@
 
 Line::Line(sf::Color color) : _color(color) {}
 
-void Line::addConnection(size_t a, size_t b) {
+void Line::addConnection(size_t a, size_t b)
+{
     if (!hasConnection(a, b))
         _connections.emplace_back(a, b);
 }
 
-bool Line::hasConnection(size_t a, size_t b) const {
+bool Line::hasConnection(size_t a, size_t b) const
+{
     return std::any_of(_connections.begin(), _connections.end(), [&](const auto& p) {
         return (p.first == a && p.second == b) || (p.first == b && p.second == a);
     });
 }
 
-sf::Color Line::getColor() const {
+sf::Color Line::getColor() const
+{
     return _color;
 }
 

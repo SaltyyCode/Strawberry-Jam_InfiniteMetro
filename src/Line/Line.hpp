@@ -6,7 +6,6 @@
 class Line {
 public:
     Line(sf::Color color);
-
     void addConnection(size_t a, size_t b);
     bool hasConnection(size_t a, size_t b) const;
     void render(sf::RenderWindow& window, const std::vector<class Station>& stations) const;
