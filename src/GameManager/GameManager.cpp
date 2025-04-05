@@ -1,6 +1,5 @@
 #include "GameManager.hpp"
 
-
 static const std::vector<sf::Color> LINE_COLORS = {
     sf::Color::Red, sf::Color::Blue, sf::Color::Green, sf::Color::Magenta, sf::Color::Cyan
 };
@@ -28,6 +27,12 @@ void GameManager::removeTrains()
     _maxTrains -= 1;
 }
 
+void GameManager::addTrains() {
+    if (_maxTrains >= 3)
+        return;
+    _maxTrains += 1;
+}
+
 const std::vector<Line>& GameManager::getMetroLines() const
 {
     return _metroLines;
@@ -40,6 +45,16 @@ int GameManager::getSelectedLineIndex() const
 
 void GameManager::handleMousePressed(sf::Vector2f mousePos)
 {
+    // Check if a train is clicked
+    for (auto it = _trains.begin(); it != _trains.end(); ++it) {
+        sf::FloatRect trainBounds = it->getGlobalBounds();
+        if (trainBounds.contains(mousePos)) {
+            _trains.erase(it);
+            addTrains();
+            return;
+        }
+    }
+
     bool clickedOnLineSelector = false;
     for (int i = 0; i < (int)_metroLines.size(); ++i) {
         float cx = 100 + i * 60.f;

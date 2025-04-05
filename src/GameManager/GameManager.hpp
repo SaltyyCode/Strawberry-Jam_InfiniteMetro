@@ -23,6 +23,7 @@ public:
     const std::vector<Line>& getMetroLines() const;
     int getSelectedLineIndex() const;
     void removeTrains();
+    void addTrains();
 
     void handleMousePressed(sf::Vector2f mousePos);
     void handleMouseReleased(sf::Vector2f mousePos);

@@ -9,7 +9,6 @@ Train::Train(sf::Color color, sf::Vector2f position, float rotation, int maxPass
     _shape.setPosition(position);
     _shape.setOrigin(_shape.getSize() / 2.f);
     _shape.setRotation(rotation);
-
 }
 
 void Train::render(sf::RenderWindow& window) const
@@ -23,4 +22,8 @@ std::vector<Train> Train::createTrain(sf::Color color, sf::Vector2f position, sf
     float angle = std::atan2(direction.y, direction.x) * 180.f / M_PI;
     trains.emplace_back(color, position, angle);
     return trains;
+}
+
+sf::FloatRect Train::getGlobalBounds() const {
+    return _shape.getGlobalBounds();
 }
