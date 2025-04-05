@@ -43,21 +43,26 @@ void UIManager::render(sf::RenderWindow& window, const std::vector<Station>& sta
     window.draw(_bgSprite);
     window.draw(_titleText);
 
-    for (const auto& line : lines)
+    for (const auto& line : lines){
         line.render(window, stations);
+    }
 
-    for (const auto& station : stations)
-        station.render(window);
+    for (const auto& station : stations) {
+            station.render(window);
+    }
 
+    float totalWidth = lines.size() * 60.f;
+    float startX = (window.getSize().x - totalWidth) / 2.f;
+        
     for (size_t i = 0; i < lines.size(); ++i) {
         sf::CircleShape circle(20.f);
         circle.setFillColor(lines[i].getColor());
-        circle.setPosition(80 + i * 60.f, 680.f);
+        circle.setPosition(startX + i * 60.f, window.getSize().y - 60.f);
         circle.setOutlineThickness((int)i == selectedLineIndex ? 4.f : 1.f);
         circle.setOutlineColor(sf::Color::Black);
         window.draw(circle);
     }
-
+        
     float x = 20.f, y = 20.f;
     for (int i = 0; i < 3; ++i) {
         sf::RectangleShape bar(sf::Vector2f(30.f, 4.f));

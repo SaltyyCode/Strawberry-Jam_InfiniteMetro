@@ -21,12 +21,12 @@ public:
     const std::vector<Line>& getMetroLines() const;
     int getSelectedLineIndex() const;
 
-    void handleMousePressed(sf::Vector2f mousePos);
+    void handleMousePressed(sf::Vector2f mousePos, sf::Vector2u windowSize);
     void handleMouseReleased(sf::Vector2f mousePos);
     void renderLinePreview(sf::RenderWindow& window, sf::Vector2f currentMousePos) const;
 
 private:
-    void selectLineAt(sf::Vector2f pos);
+    void selectLineAt(sf::Vector2f pos, sf::Vector2u windowSize);
     bool isTooCloseToLine(sf::Vector2f pos) const;
 
     std::vector<Station> _stations;

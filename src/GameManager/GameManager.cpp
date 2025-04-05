@@ -1,4 +1,5 @@
 #include "GameManager.hpp"
+#include <iostream>
 
 
 static const std::vector<sf::Color> LINE_COLORS = {
@@ -31,9 +32,9 @@ int GameManager::getSelectedLineIndex() const
     return _selectedLineIndex;
 }
 
-void GameManager::handleMousePressed(sf::Vector2f mousePos)
+void GameManager::handleMousePressed(sf::Vector2f mousePos, sf::Vector2u windowSize)
 {
-    selectLineAt(mousePos);
+    selectLineAt(mousePos, windowSize);
 
     if (_selectedLineIndex == -1)
         return;
@@ -48,6 +49,7 @@ void GameManager::handleMousePressed(sf::Vector2f mousePos)
         }
     }
 }
+
 
 void GameManager::handleMouseReleased(sf::Vector2f mousePos)
 {
@@ -93,11 +95,15 @@ void GameManager::renderLinePreview(sf::RenderWindow& window, sf::Vector2f curre
     window.draw(line, 2, sf::Lines);
 }
 
-void GameManager::selectLineAt(sf::Vector2f pos)
+void GameManager::selectLineAt(sf::Vector2f pos, sf::Vector2u windowSize)
 {
+    float totalWidth = _metroLines.size() * 60.f;
+    float startX = (windowSize.x - totalWidth) / 2.f;
+    float y = windowSize.y - 60.f;
+
     for (int i = 0; i < (int)_metroLines.size(); ++i) {
-        float cx = 100 + i * 60.f;
-        float cy = 700.f;
+        float cx = startX + i * 60.f + 20.f;
+        float cy = y + 20.f;
 
         float dist = std::hypot(pos.x - cx, pos.y - cy);
         if (dist < 20.f) {

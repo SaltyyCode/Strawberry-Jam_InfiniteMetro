@@ -11,7 +11,7 @@ void handleEvents(sf::RenderWindow& window, GameManager& game, UIManager& ui, bo
         if (!isPaused) {
             if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
                 sf::Vector2f pos = window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y });
-                game.handleMousePressed(pos);
+                game.handleMousePressed(pos, window.getSize());
             }
 
             if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left) {
