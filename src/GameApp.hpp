@@ -5,6 +5,7 @@ struct MapConfig {
     std::string name;
     std::string backgroundPath;
     int maxStations;
+    int startLines;
     int maxLines;
     float stationSpawnDelay;
 };
