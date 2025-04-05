@@ -1,19 +1,18 @@
 #include "GameManager.hpp"
-#include <iostream>
 
 
 static const std::vector<sf::Color> LINE_COLORS = {
-    sf::Color::Red, sf::Color::Blue, sf::Color::Green, sf::Color::Magenta, sf::Color::Cyan
+    sf::Color::Red, sf::Color::Blue, sf::Color::Green, sf::Color::Magenta, sf::Color::Cyan, sf::Color::Yellow, sf::Color(255, 165, 0), sf::Color(128, 0, 128)
 };
 
-GameManager::GameManager(int maxStations, float spawnDelay, int maxLines)
-    : _spawnDelay(spawnDelay), _maxStations(maxStations), _maxLines(maxLines)
+GameManager::GameManager(int maxStations, float spawnDelay, int startLines, int maxLines)
+    : _maxStations(maxStations), _spawnDelay(spawnDelay),  _startLines(startLines), _maxLines(maxLines)
 {
     std::srand(std::time(nullptr));
     spawnStation();
     _spawnClock.restart();
 
-    for (int i = 0; i < maxLines && i < (int)LINE_COLORS.size(); ++i)
+    for (int i = 0; i < _startLines && i < (int)LINE_COLORS.size(); ++i)
         _metroLines.emplace_back(LINE_COLORS[i]);
 }
 
@@ -49,7 +48,6 @@ void GameManager::handleMousePressed(sf::Vector2f mousePos, sf::Vector2u windowS
         }
     }
 }
-
 
 void GameManager::handleMouseReleased(sf::Vector2f mousePos)
 {
@@ -126,7 +124,16 @@ void GameManager::updateStations()
 {
     for (auto& station : _stations)
         station.update();
+
+    int expectedLines = _startLines + static_cast<int>(_stations.size()) / 3;
+    expectedLines = std::min(expectedLines, _maxLines);
+
+    if ((int)_metroLines.size() < expectedLines && (int)_metroLines.size() < (int)LINE_COLORS.size()) {
+        _metroLines.emplace_back(LINE_COLORS[_metroLines.size()]);
+    
+    }
 }
+
 
 void GameManager::spawnStation()
 {

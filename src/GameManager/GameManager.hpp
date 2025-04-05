@@ -1,21 +1,17 @@
 #pragma once
 
+#include <SFML/Graphics.hpp>
 #include <vector>
-#include <cstdlib>
-#include <ctime>
+#include <set>
+#include <iostream>
 #include <cmath>
 #include <algorithm>
-#include <SFML/System/Clock.hpp>
 #include "../Station/Station.hpp"
 #include "../Line/Line.hpp"
 
 class GameManager {
 public:
-    GameManager(int maxStations = 10, float spawnDelay = 10.f, int maxLines = 3);
-
-    void update();
-    void updateStations();
-    void spawnStation();
+    GameManager(int maxStations, float spawnDelay, int startLines, int maxLines);
 
     const std::vector<Station>& getStations() const;
     const std::vector<Line>& getMetroLines() const;
@@ -25,20 +21,26 @@ public:
     void handleMouseReleased(sf::Vector2f mousePos);
     void renderLinePreview(sf::RenderWindow& window, sf::Vector2f currentMousePos) const;
 
+    void update();
+    void updateStations();
+
 private:
-    void selectLineAt(sf::Vector2f pos, sf::Vector2u windowSize);
+    void spawnStation();
     bool isTooCloseToLine(sf::Vector2f pos) const;
+    void selectLineAt(sf::Vector2f pos, sf::Vector2u windowSize);
 
     std::vector<Station> _stations;
-    std::vector<Station::StationColor> _usedColors;
     std::vector<Line> _metroLines;
+    std::vector<Station::StationColor> _usedColors;
 
-    int _selectedLineIndex = -1;
     Station* _selectedStation = nullptr;
+    int _selectedLineIndex = -1;
     bool _isDragging = false;
 
-    sf::Clock _spawnClock;
-    float _spawnDelay;
     int _maxStations;
+    float _spawnDelay;
+    int _startLines;
     int _maxLines;
+
+    sf::Clock _spawnClock;
 };
