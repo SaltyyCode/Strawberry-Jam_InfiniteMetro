@@ -6,8 +6,10 @@
 #include <cmath>
 #include <algorithm>
 #include <SFML/System/Clock.hpp>
+#include <SFML/Graphics.hpp>
 #include "../Station/Station.hpp"
 #include "../Line/Line.hpp"
+#include "../Train/Train.hpp"
 
 class GameManager {
 public:
@@ -24,14 +26,15 @@ public:
     void handleMousePressed(sf::Vector2f mousePos);
     void handleMouseReleased(sf::Vector2f mousePos);
     void renderLinePreview(sf::RenderWindow& window, sf::Vector2f currentMousePos) const;
+    void render(sf::RenderWindow& window);
 
 private:
-    void selectLineAt(sf::Vector2f pos);
     bool isTooCloseToLine(sf::Vector2f pos) const;
 
     std::vector<Station> _stations;
     std::vector<Station::StationColor> _usedColors;
     std::vector<Line> _metroLines;
+    std::vector<Train> _trains;
 
     int _selectedLineIndex = -1;
     Station* _selectedStation = nullptr;

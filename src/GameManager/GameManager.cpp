@@ -33,18 +33,71 @@ int GameManager::getSelectedLineIndex() const
 
 void GameManager::handleMousePressed(sf::Vector2f mousePos)
 {
-    selectLineAt(mousePos);
-
-    if (_selectedLineIndex == -1)
-        return;
-
-    for (auto& station : _stations) {
-        float dist = std::hypot(station.getPosition().x - mousePos.x,
-                                station.getPosition().y - mousePos.y);
-        if (dist < 30.f) {
-            _selectedStation = &station;
-            _isDragging = true;
+    bool clickedOnLineSelector = false;
+    for (int i = 0; i < (int)_metroLines.size(); ++i) {
+        float cx = 100 + i * 60.f;
+        float cy = 700.f;
+        
+        float dist = std::hypot(mousePos.x - cx, mousePos.y - cy);
+        if (dist < 20.f) {
+            _selectedLineIndex = i;
+            clickedOnLineSelector = true;
             break;
+        }
+    }
+    
+    if (!clickedOnLineSelector) {
+        bool clickedOnLine = false;
+        for (size_t lineIdx = 0; lineIdx < _metroLines.size(); ++lineIdx) {
+            const auto& line = _metroLines[lineIdx];
+            
+            for (const auto& [iA, iB] : line.getConnections()) {
+                if (iA >= _stations.size() || iB >= _stations.size()) continue;
+                
+                auto a = _stations[iA].getPosition();
+                auto b = _stations[iB].getPosition();
+                
+                sf::Vector2f ab = b - a;
+                sf::Vector2f ap = mousePos - a;
+                
+                float abLenSq = ab.x * ab.x + ab.y * ab.y;
+                if (abLenSq == 0) continue;
+                
+                float dot = (ap.x * ab.x + ap.y * ab.y) / abLenSq;
+                
+                dot = std::clamp(dot, 0.f, 1.f);
+                sf::Vector2f closest = a + dot * ab;
+                float dx = closest.x - mousePos.x;
+                float dy = closest.y - mousePos.y;
+                
+                float dist = std::sqrt(dx * dx + dy * dy);
+                if (dist < 10.f) {
+                    sf::Vector2f direction = b - a;
+                    float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+                    if (length > 0) {
+                        direction /= length;
+                    }
+                    sf::Vector2f trainPosition = closest;
+                    
+                    auto newTrains = Train::createTrain(line.getColor(), trainPosition, direction);
+                    _trains.insert(_trains.end(), newTrains.begin(), newTrains.end());
+                    clickedOnLine = true;
+                    break;
+                }
+            }
+            
+            if (clickedOnLine) break;
+        }
+        if (!clickedOnLine && _selectedLineIndex != -1) {
+            for (auto& station : _stations) {
+                float dist = std::hypot(station.getPosition().x - mousePos.x,
+                                        station.getPosition().y - mousePos.y);
+                if (dist < 30.f) {
+                    _selectedStation = &station;
+                    _isDragging = true;
+                    break;
+                }
+            }
         }
     }
 }
@@ -91,20 +144,6 @@ void GameManager::renderLinePreview(sf::RenderWindow& window, sf::Vector2f curre
     };
 
     window.draw(line, 2, sf::Lines);
-}
-
-void GameManager::selectLineAt(sf::Vector2f pos)
-{
-    for (int i = 0; i < (int)_metroLines.size(); ++i) {
-        float cx = 100 + i * 60.f;
-        float cy = 700.f;
-
-        float dist = std::hypot(pos.x - cx, pos.y - cy);
-        if (dist < 20.f) {
-            _selectedLineIndex = i;
-            break;
-        }
-    }
 }
 
 void GameManager::update()
@@ -168,4 +207,11 @@ bool GameManager::isTooCloseToLine(sf::Vector2f pos) const
         }
     }
     return false;
+}
+
+void GameManager::render(sf::RenderWindow& window)
+{
+    for (const auto& train : _trains) {
+        train.render(window);
+    }
 }

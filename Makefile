@@ -11,6 +11,7 @@ SRCS = $(SRC_DIR)/main.cpp \
        $(SRC_DIR)/Station/Station.cpp \
 	   $(SRC_DIR)/GameManager/GameManager.cpp \
 	   $(SRC_DIR)/Line/Line.cpp \
+	   $(SRC_DIR)/Train/Train.cpp \
 
 OBJS = $(SRCS:.cpp=.o)
 

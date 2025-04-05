@@ -38,6 +38,7 @@ int GameApp::run(const std::string& mapName)
 
         window.clear(sf::Color::Black);
         ui.render(window, game.getStations(), game.getMetroLines(), game.getSelectedLineIndex(), _isPaused);
+        game.render(window);
         window.display();
     }
 
