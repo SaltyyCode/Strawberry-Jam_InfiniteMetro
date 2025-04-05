@@ -1,14 +1,15 @@
 #include "Train.hpp"
 #include <cmath>
 
-Train::Train(sf::Color color, sf::Vector2f position, float rotation)
-    : _color(color)
+Train::Train(sf::Color color, sf::Vector2f position, float rotation, int maxPassengers)
+    : _color(color), _maxPassengers(maxPassengers)
 {
     _shape.setSize(sf::Vector2f(50.f, 30.f));
     _shape.setFillColor(color);
     _shape.setPosition(position);
     _shape.setOrigin(_shape.getSize() / 2.f);
     _shape.setRotation(rotation);
+
 }
 
 void Train::render(sf::RenderWindow& window) const

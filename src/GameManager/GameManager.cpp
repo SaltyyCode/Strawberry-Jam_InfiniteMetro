@@ -5,8 +5,8 @@ static const std::vector<sf::Color> LINE_COLORS = {
     sf::Color::Red, sf::Color::Blue, sf::Color::Green, sf::Color::Magenta, sf::Color::Cyan
 };
 
-GameManager::GameManager(int maxStations, float spawnDelay, int maxLines)
-    : _spawnDelay(spawnDelay), _maxStations(maxStations), _maxLines(maxLines)
+GameManager::GameManager(int maxStations, float spawnDelay, int maxLines, int maxTrains)
+    : _spawnDelay(spawnDelay), _maxStations(maxStations), _maxLines(maxLines), _maxTrains(maxTrains)
 {
     std::srand(std::time(nullptr));
     spawnStation();
@@ -19,6 +19,13 @@ GameManager::GameManager(int maxStations, float spawnDelay, int maxLines)
 const std::vector<Station>& GameManager::getStations() const
 {
     return _stations;
+}
+
+void GameManager::removeTrains()
+{
+    if (_maxTrains <= 0)
+        return;
+    _maxTrains -= 1;
 }
 
 const std::vector<Line>& GameManager::getMetroLines() const
@@ -37,7 +44,7 @@ void GameManager::handleMousePressed(sf::Vector2f mousePos)
     for (int i = 0; i < (int)_metroLines.size(); ++i) {
         float cx = 100 + i * 60.f;
         float cy = 700.f;
-        
+
         float dist = std::hypot(mousePos.x - cx, mousePos.y - cy);
         if (dist < 20.f) {
             _selectedLineIndex = i;
@@ -45,47 +52,49 @@ void GameManager::handleMousePressed(sf::Vector2f mousePos)
             break;
         }
     }
-    
+
     if (!clickedOnLineSelector) {
         bool clickedOnLine = false;
         for (size_t lineIdx = 0; lineIdx < _metroLines.size(); ++lineIdx) {
             const auto& line = _metroLines[lineIdx];
-            
+
             for (const auto& [iA, iB] : line.getConnections()) {
                 if (iA >= _stations.size() || iB >= _stations.size()) continue;
-                
+
                 auto a = _stations[iA].getPosition();
                 auto b = _stations[iB].getPosition();
-                
+
                 sf::Vector2f ab = b - a;
                 sf::Vector2f ap = mousePos - a;
-                
+
                 float abLenSq = ab.x * ab.x + ab.y * ab.y;
                 if (abLenSq == 0) continue;
-                
+
                 float dot = (ap.x * ab.x + ap.y * ab.y) / abLenSq;
-                
+
                 dot = std::clamp(dot, 0.f, 1.f);
                 sf::Vector2f closest = a + dot * ab;
                 float dx = closest.x - mousePos.x;
                 float dy = closest.y - mousePos.y;
-                
+
                 float dist = std::sqrt(dx * dx + dy * dy);
                 if (dist < 10.f) {
-                    sf::Vector2f direction = b - a;
-                    float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
-                    if (length > 0) {
-                        direction /= length;
+                    if (_trains.size() < static_cast<size_t>(_maxTrains)) {
+                        sf::Vector2f direction = b - a;
+                        float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+                        if (length > 0) {
+                            direction /= length;
+                        }
+                        sf::Vector2f trainPosition = closest;
+
+                        auto newTrains = Train::createTrain(line.getColor(), trainPosition, direction);
+                        _trains.insert(_trains.end(), newTrains.begin(), newTrains.end());
                     }
-                    sf::Vector2f trainPosition = closest;
-                    
-                    auto newTrains = Train::createTrain(line.getColor(), trainPosition, direction);
-                    _trains.insert(_trains.end(), newTrains.begin(), newTrains.end());
                     clickedOnLine = true;
                     break;
                 }
             }
-            
+
             if (clickedOnLine) break;
         }
         if (!clickedOnLine && _selectedLineIndex != -1) {

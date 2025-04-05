@@ -13,7 +13,7 @@
 
 class GameManager {
 public:
-    GameManager(int maxStations = 10, float spawnDelay = 10.f, int maxLines = 3);
+    GameManager(int maxStations = 10, float spawnDelay = 10.f, int maxLines = 3, int maxTrains = 3);
 
     void update();
     void updateStations();
@@ -22,6 +22,7 @@ public:
     const std::vector<Station>& getStations() const;
     const std::vector<Line>& getMetroLines() const;
     int getSelectedLineIndex() const;
+    void removeTrains();
 
     void handleMousePressed(sf::Vector2f mousePos);
     void handleMouseReleased(sf::Vector2f mousePos);
@@ -44,4 +45,5 @@ private:
     float _spawnDelay;
     int _maxStations;
     int _maxLines;
+    int _maxTrains;
 };
