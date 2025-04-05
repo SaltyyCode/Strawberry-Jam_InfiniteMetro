@@ -1,6 +1,6 @@
 #include "Events.hpp"
 
-void handleEvents(sf::RenderWindow& window, GameManager& game, UIManager& ui, bool& isPaused)
+void handleEvents(sf::RenderWindow& window, GameManager& game, UIManager& ui, bool& isPaused, bool& isMuted)
 {
     sf::Event event;
 
@@ -22,8 +22,21 @@ void handleEvents(sf::RenderWindow& window, GameManager& game, UIManager& ui, bo
 
         if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
             sf::Vector2f pos = window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y });
+
             if (ui.isClickOnMenu(pos)) {
                 isPaused = !isPaused;
+            }
+
+            if (isPaused) {
+                if (ui.isClickOnSettings(pos)) {
+                    // futur menu
+                }
+                if (ui.isClickOnMute(pos)) {
+                    isMuted = !isMuted;
+                }
+                if (ui.isClickOnQuit(pos)) {
+                    window.close();
+                }
             }
         }
 

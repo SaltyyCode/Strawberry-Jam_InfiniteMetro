@@ -15,4 +15,5 @@ public:
 
 private:
     bool _isPaused = false;
+    bool _isMuted = false;
 };

@@ -38,7 +38,7 @@ void UIManager::loadBackground(const std::string& path, const sf::RenderWindow& 
     _bgSprite.setPosition(offsetX, offsetY);
 }
 
-void UIManager::render(sf::RenderWindow& window, const std::vector<Station>& stations, const std::vector<Line>& lines, int selectedLineIndex, bool isPaused)
+void UIManager::render(sf::RenderWindow& window, const std::vector<Station>& stations, const std::vector<Line>& lines, int selectedLineIndex, bool isPaused, bool isMuted)
 {
     window.draw(_bgSprite);
     window.draw(_titleText);
@@ -79,10 +79,39 @@ void UIManager::render(sf::RenderWindow& window, const std::vector<Station>& sta
         pauseText.setOrigin(tBounds.width / 2.f, tBounds.height / 2.f);
         pauseText.setPosition(window.getSize().x / 2.f, 80.f);
         window.draw(pauseText);
+
+        auto drawButton = [&](sf::FloatRect rect, const std::string& label) {
+            sf::RectangleShape button(sf::Vector2f(rect.width, rect.height));
+            button.setPosition(rect.left, rect.top);
+            button.setFillColor(sf::Color(100, 100, 100));
+            button.setOutlineThickness(2.f);
+            button.setOutlineColor(sf::Color::White);
+            window.draw(button);
+
+            sf::Text text(label, _font, 20);
+            text.setFillColor(sf::Color::White);
+            text.setPosition(rect.left + 10.f, rect.top + 5.f);
+            window.draw(text);
+        };
+
+        drawButton(_settingsRect, "Settings");
+        drawButton(_muteRect, isMuted ? "Unmute" : "Mute");
+        drawButton(_quitRect, "Quit Game");
     }
 }
 
-bool UIManager::isClickOnMenu(sf::Vector2f pos) const
-{
+bool UIManager::isClickOnMenu(sf::Vector2f pos) const {
     return _menuRect.contains(pos);
+}
+
+bool UIManager::isClickOnSettings(sf::Vector2f pos) const {
+    return _settingsRect.contains(pos);
+}
+
+bool UIManager::isClickOnMute(sf::Vector2f pos) const {
+    return _muteRect.contains(pos);
+}
+
+bool UIManager::isClickOnQuit(sf::Vector2f pos) const {
+    return _quitRect.contains(pos);
 }
