@@ -24,6 +24,8 @@ public:
     int getSelectedLineIndex() const;
     void removeTrains();
     void addTrains();
+    void toggleTrainMode();
+    bool isTrainMode() const;
 
     void handleMousePressed(sf::Vector2f mousePos);
     void handleMouseReleased(sf::Vector2f mousePos);
@@ -41,6 +43,7 @@ private:
     int _selectedLineIndex = -1;
     Station* _selectedStation = nullptr;
     bool _isDragging = false;
+    bool _trainMode = false;
 
     sf::Clock _spawnClock;
     float _spawnDelay;

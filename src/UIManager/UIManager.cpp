@@ -36,9 +36,14 @@ void UIManager::loadBackground(const std::string& path, const sf::RenderWindow& 
     float offsetX = (winSize.x - texSize.x * scale) / 2.f;
     float offsetY = (winSize.y - texSize.y * scale) / 2.f;
     _bgSprite.setPosition(offsetX, offsetY);
+
+    // Initialize the train mode button
+    _trainModeButton.setSize(sf::Vector2f(50.f, 50.f));
+    _trainModeButton.setFillColor(sf::Color::Yellow);
+    _trainModeButton.setPosition(50.f, 50.f); // Position it appropriately
 }
 
-void UIManager::render(sf::RenderWindow& window, const std::vector<Station>& stations, const std::vector<Line>& lines, int selectedLineIndex, bool isPaused)
+void UIManager::render(sf::RenderWindow& window, const std::vector<Station>& stations, const std::vector<Line>& lines, int selectedLineIndex, bool isPaused, bool isTrainMode)
 {
     window.draw(_bgSprite);
     window.draw(_titleText);
@@ -66,6 +71,15 @@ void UIManager::render(sf::RenderWindow& window, const std::vector<Station>& sta
         window.draw(bar);
     }
 
+    // Render the train mode button with outline if active
+    if (isTrainMode) {
+        _trainModeButton.setOutlineThickness(4.f);
+        _trainModeButton.setOutlineColor(sf::Color::Black);
+    } else {
+        _trainModeButton.setOutlineThickness(0.f);
+    }
+    window.draw(_trainModeButton);
+
     if (isPaused) {
         sf::RectangleShape overlay(sf::Vector2f(window.getSize()));
         overlay.setFillColor(sf::Color(0, 0, 0, 150));
@@ -85,4 +99,8 @@ void UIManager::render(sf::RenderWindow& window, const std::vector<Station>& sta
 bool UIManager::isClickOnMenu(sf::Vector2f pos) const
 {
     return _menuRect.contains(pos);
+}
+
+bool UIManager::isClickOnTrainModeButton(sf::Vector2f pos) const {
+    return _trainModeButton.getGlobalBounds().contains(pos);
 }

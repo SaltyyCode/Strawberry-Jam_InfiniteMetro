@@ -43,16 +43,28 @@ int GameManager::getSelectedLineIndex() const
     return _selectedLineIndex;
 }
 
+void GameManager::toggleTrainMode()
+{
+    _trainMode = !_trainMode;
+}
+
+bool GameManager::isTrainMode() const
+{
+    return _trainMode;
+}
+
 void GameManager::handleMousePressed(sf::Vector2f mousePos)
 {
-    // Check if a train is clicked
-    for (auto it = _trains.begin(); it != _trains.end(); ++it) {
-        sf::FloatRect trainBounds = it->getGlobalBounds();
-        if (trainBounds.contains(mousePos)) {
-            _trains.erase(it);
-            addTrains();
-            return;
+    if (_trainMode) {
+        for (auto it = _trains.begin(); it != _trains.end(); ++it) {
+            sf::FloatRect trainBounds = it->getGlobalBounds();
+            if (trainBounds.contains(mousePos)) {
+                _trains.erase(it);
+                addTrains();
+                return;
+            }
         }
+        return;
     }
 
     bool clickedOnLineSelector = false;
