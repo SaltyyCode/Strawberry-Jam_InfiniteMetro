@@ -5,6 +5,7 @@ struct MapConfig {
     std::string name;
     std::string backgroundPath;
     int maxStations;
+    int startLines;
     int maxLines;
     float stationSpawnDelay;
 };
@@ -15,4 +16,5 @@ public:
 
 private:
     bool _isPaused = false;
+    bool _isMuted = false;
 };

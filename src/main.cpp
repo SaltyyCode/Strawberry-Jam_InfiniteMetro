@@ -1,13 +1,9 @@
-#include <iostream>
-#include "GameApp.hpp"
+#include "UIManager/menu.hpp"
 
-int main(int argc, char** argv)
+int main()
 {
-    if (argc < 2) {
-        std::cerr << "Usage: " << argv[0] << " <map_name>" << std::endl;
-        return 1;
-    }
-
-    GameApp app;
-    return app.run(argv[1]);
+    Menu menu;
+    menu.run_menu(); // Lancer le menu au démarrage
+    return 0;
 }
+    

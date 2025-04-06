@@ -1,6 +1,15 @@
 #include "UIManager.hpp"
 #include <iostream>
 
+#include "UIManager.hpp"
+
+UIManager::UIManager() {
+}
+
+UIManager::UIManager(int stationCount) {
+    (void)stationCount; // Utilisation de stationCount si nécessaire
+}
+
 void UIManager::loadBackground(const std::string& path, const sf::RenderWindow& window, const std::string& cityName)
 {
     if (!_bgTexture.loadFromFile(path)) {
@@ -43,26 +52,31 @@ void UIManager::loadBackground(const std::string& path, const sf::RenderWindow& 
     _trainModeButton.setPosition(50.f, 50.f); // Position it appropriately
 }
 
-void UIManager::render(sf::RenderWindow& window, const std::vector<Station>& stations, const std::vector<Line>& lines, int selectedLineIndex, bool isPaused, bool isTrainMode)
+void UIManager::render(sf::RenderWindow& window, const std::vector<Station>& stations, const std::vector<Line>& lines, int selectedLineIndex, bool isPaused, bool isMuted, bool isTrainMode)
 {
     window.draw(_bgSprite);
     window.draw(_titleText);
 
-    for (const auto& line : lines)
+    for (const auto& line : lines){
         line.render(window, stations);
+    }
 
-    for (const auto& station : stations)
-        station.render(window);
+    for (const auto& station : stations) {
+            station.render(window);
+    }
 
+    float totalWidth = lines.size() * 60.f;
+    float startX = (window.getSize().x - totalWidth) / 2.f;
+        
     for (size_t i = 0; i < lines.size(); ++i) {
         sf::CircleShape circle(20.f);
         circle.setFillColor(lines[i].getColor());
-        circle.setPosition(80 + i * 60.f, 680.f);
+        circle.setPosition(startX + i * 60.f, window.getSize().y - 60.f);
         circle.setOutlineThickness((int)i == selectedLineIndex ? 4.f : 1.f);
         circle.setOutlineColor(sf::Color::Black);
         window.draw(circle);
     }
-
+        
     float x = 20.f, y = 20.f;
     for (int i = 0; i < 3; ++i) {
         sf::RectangleShape bar(sf::Vector2f(30.f, 4.f));
@@ -71,7 +85,6 @@ void UIManager::render(sf::RenderWindow& window, const std::vector<Station>& sta
         window.draw(bar);
     }
 
-    // Render the train mode button with outline if active
     if (isTrainMode) {
         _trainModeButton.setOutlineThickness(4.f);
         _trainModeButton.setOutlineColor(sf::Color::Black);
@@ -93,14 +106,43 @@ void UIManager::render(sf::RenderWindow& window, const std::vector<Station>& sta
         pauseText.setOrigin(tBounds.width / 2.f, tBounds.height / 2.f);
         pauseText.setPosition(window.getSize().x / 2.f, 80.f);
         window.draw(pauseText);
+
+        auto drawButton = [&](sf::FloatRect rect, const std::string& label) {
+            sf::RectangleShape button(sf::Vector2f(rect.width, rect.height));
+            button.setPosition(rect.left, rect.top);
+            button.setFillColor(sf::Color(100, 100, 100));
+            button.setOutlineThickness(2.f);
+            button.setOutlineColor(sf::Color::White);
+            window.draw(button);
+
+            sf::Text text(label, _font, 20);
+            text.setFillColor(sf::Color::White);
+            text.setPosition(rect.left + 10.f, rect.top + 5.f);
+            window.draw(text);
+        };
+
+        drawButton(_settingsRect, "Settings");
+        drawButton(_muteRect, isMuted ? "Unmute" : "Mute");
+        drawButton(_quitRect, "Quit Game");
     }
 }
 
-bool UIManager::isClickOnMenu(sf::Vector2f pos) const
-{
+bool UIManager::isClickOnMenu(sf::Vector2f pos) const {
     return _menuRect.contains(pos);
 }
 
 bool UIManager::isClickOnTrainModeButton(sf::Vector2f pos) const {
     return _trainModeButton.getGlobalBounds().contains(pos);
+}
+
+bool UIManager::isClickOnSettings(sf::Vector2f pos) const {
+    return _settingsRect.contains(pos);
+}
+
+bool UIManager::isClickOnMute(sf::Vector2f pos) const {
+    return _muteRect.contains(pos);
+}
+
+bool UIManager::isClickOnQuit(sf::Vector2f pos) const {
+    return _quitRect.contains(pos);
 }
