@@ -7,6 +7,7 @@ struct MapConfig {
     int maxStations;
     int startLines;
     int maxLines;
+    int maxTrains;
     float stationSpawnDelay;
 };
 

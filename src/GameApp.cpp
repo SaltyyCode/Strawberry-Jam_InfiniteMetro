@@ -9,9 +9,9 @@
 int GameApp::run(const std::string& mapName)
 {
     std::map<std::string, MapConfig> mapConfigs = {
-        {"paris", {"Paris", "assets/maps/paris.png", 10, 3, 6, 10.f}},
-        {"london", {"London", "assets/maps/london.png", 15, 4, 8, 7.f}},
-        {"newyork", {"New York", "assets/maps/newyork.png", 20, 5, 10, 5.f}},
+        {"paris", {"Paris", "assets/maps/paris.png", 10, 3, 6, 5,10.f}},
+        {"london", {"London", "assets/maps/london.png", 15, 4, 8, 5,7.f}},
+        {"newyork", {"New York", "assets/maps/newyork.png", 20, 5, 10, 5,5.f}},
     };
 
     if (!mapConfigs.count(mapName)) {
@@ -24,7 +24,7 @@ int GameApp::run(const std::string& mapName)
     sf::RenderWindow window(sf::VideoMode(1280, 720), "Infinite Metro - " + config.name);
     window.setFramerateLimit(60);
 
-    GameManager game(config.maxStations, config.stationSpawnDelay, config.startLines, config.maxLines);
+    GameManager game(config.maxStations, config.stationSpawnDelay, config.startLines, config.maxLines, config.maxTrains);
     UIManager ui;
     ui.loadBackground(config.backgroundPath, window, config.name);
 

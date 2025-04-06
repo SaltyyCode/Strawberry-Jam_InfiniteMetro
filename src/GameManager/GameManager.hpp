@@ -15,10 +15,7 @@
 class GameManager {
 public:
     GameManager(int maxStations, float spawnDelay, int startLines, int maxLines, int maxTrains);
-    void update();
-    void updateStations();
     void updateTrains(float deltaTime);
-    void spawnStation();
 
     const std::vector<Station>& getStations() const;
     const std::vector<Line>& getMetroLines() const;

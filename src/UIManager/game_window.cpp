@@ -28,7 +28,7 @@ int game_window()
         }
 
         window.clear(sf::Color::White);
-        uiManager.render(window, stations, lines, selectedLineIndex, isPaused, isMuted);
+        uiManager.render(window, stations, lines, selectedLineIndex, isPaused, isMuted, false);
         window.display();
     }
     return 0;
