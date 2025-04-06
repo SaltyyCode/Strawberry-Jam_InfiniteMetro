@@ -144,6 +144,7 @@ void GameManager::handleMouseReleased(sf::Vector2f mousePos)
         return;
 
     auto& line = _metroLines[_selectedLineIndex];
+    bool lineAdded = false;
 
     for (auto& station : _stations) {
         if (&station == _selectedStation)
@@ -157,9 +158,14 @@ void GameManager::handleMouseReleased(sf::Vector2f mousePos)
 
             if (!line.hasConnection(iA, iB) && line.canAddConnection(4)) {
                 line.addConnection(iA, iB);
+                lineAdded = true;
             }
             break;
         }
+    }
+
+    if (lineAdded) {
+        recalculateAllTrainPaths();
     }
 
     _selectedStation = nullptr;
@@ -184,17 +190,28 @@ void GameManager::renderLinePreview(sf::RenderWindow& window, sf::Vector2f curre
 
 void GameManager::update()
 {
+    float deltaTime = _deltaClock.restart().asSeconds();
+    
     if (_stations.size() < static_cast<size_t>(_maxStations) &&
         _spawnClock.getElapsedTime().asSeconds() >= _spawnDelay) {
         spawnStation();
         _spawnClock.restart();
     }
+    
+    updateTrains(deltaTime);
 }
 
 void GameManager::updateStations()
 {
     for (auto& station : _stations)
         station.update();
+}
+
+void GameManager::updateTrains(float deltaTime)
+{
+    for (auto& train : _trains) {
+        train.update(deltaTime, _stations, _metroLines);
+    }
 }
 
 void GameManager::spawnStation()
@@ -247,7 +264,22 @@ bool GameManager::isTooCloseToLine(sf::Vector2f pos) const
 
 void GameManager::render(sf::RenderWindow& window)
 {
+    // Rendre le preview de ligne en cours de création
+    if (_selectedStation && _isDragging && _selectedLineIndex != -1) {
+        sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+        sf::Vector2f worldPos = window.mapPixelToCoords(mousePos);
+        renderLinePreview(window, worldPos);
+    }
+
+    // Rendre tous les trains
     for (const auto& train : _trains) {
         train.render(window);
+    }
+}
+
+void GameManager::recalculateAllTrainPaths()
+{
+    for (auto& train : _trains) {
+        train.recalculatePath();
     }
 }

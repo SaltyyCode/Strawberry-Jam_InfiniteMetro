@@ -17,6 +17,7 @@ public:
 
     void update();
     void updateStations();
+    void updateTrains(float deltaTime);
     void spawnStation();
 
     const std::vector<Station>& getStations() const;
@@ -34,6 +35,7 @@ public:
 
 private:
     bool isTooCloseToLine(sf::Vector2f pos) const;
+    void recalculateAllTrainPaths();
 
     std::vector<Station> _stations;
     std::vector<Station::StationColor> _usedColors;
@@ -46,6 +48,7 @@ private:
     bool _trainMode = false;
 
     sf::Clock _spawnClock;
+    sf::Clock _deltaClock;
     float _spawnDelay;
     int _maxStations;
     int _maxLines;
