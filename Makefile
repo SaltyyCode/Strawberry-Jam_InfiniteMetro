@@ -1,6 +1,4 @@
-
 NAME = infinite_metro
-
 
 SRC_DIR = src
 INC_DIR = include
@@ -12,13 +10,18 @@ SRCS = $(SRC_DIR)/main.cpp \
        $(SRC_DIR)/UIManager/UIManager.cpp \
        $(SRC_DIR)/UIManager/menu.cpp \
 
+	   $(SRC_DIR)/GameApp.cpp \
+	   $(SRC_DIR)/Events.cpp \
+       $(SRC_DIR)/UIManager/UIManager.cpp \
+       $(SRC_DIR)/Station/Station.cpp \
+	   $(SRC_DIR)/GameManager/GameManager.cpp \
+	   $(SRC_DIR)/Line/Line.cpp \
 
 OBJS = $(SRCS:.cpp=.o)
 
 CXX = g++
 CXXFLAGS = -I$(INC_DIR) -std=c++17 -Wall -Wextra -Werror
 LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system
-
 
 all: $(NAME)
 
