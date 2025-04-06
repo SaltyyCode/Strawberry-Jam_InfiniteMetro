@@ -1,6 +1,16 @@
 #include "UIManager.hpp"
 #include <iostream>
 
+#include "UIManager.hpp"
+
+UIManager::UIManager() {
+    // Implémentation du constructeur par défaut
+}
+
+UIManager::UIManager(int stationCount) {
+    (void)stationCount; // Utilisation de stationCount si nécessaire
+}
+
 void UIManager::loadBackground(const std::string& path, const sf::RenderWindow& window, const std::string& cityName)
 {
     if (!_bgTexture.loadFromFile(path)) {
