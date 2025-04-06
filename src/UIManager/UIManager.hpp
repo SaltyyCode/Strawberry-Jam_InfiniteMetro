@@ -1,3 +1,5 @@
+#pragma once
+
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include "../Station/Station.hpp"
@@ -5,6 +7,8 @@
 
 class UIManager {
 public:
+    UIManager(); // Constructeur par défaut
+    UIManager(int stationCount); // Nouveau constructeur avec un argument
     void loadBackground(const std::string& path, const sf::RenderWindow& window, const std::string& cityName);
     void render(sf::RenderWindow& window, const std::vector<Station>& stations, const std::vector<Line>& lines, int selectedLineIndex, bool isPaused, bool isMuted);
     bool isClickOnMenu(sf::Vector2f pos) const;

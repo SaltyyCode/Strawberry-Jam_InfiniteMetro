@@ -1,5 +1,5 @@
 #include "menu.hpp"
-#include "game_window.hpp" // Inclure la déclaration de game_window()
+#include "../GameApp.hpp" // Inclure GameApp pour charger les cartes
 #include <iostream>
 
 Menu::Menu() : window(sf::VideoMode(800, 600), "Menu") {
@@ -7,12 +7,26 @@ Menu::Menu() : window(sf::VideoMode(800, 600), "Menu") {
         std::cerr << "Failed to load font!" << std::endl;
     }
 
-    // Configure le bouton "Play"
-    playButton.setFont(font);
-    playButton.setString("Play");
-    playButton.setCharacterSize(50);
-    playButton.setFillColor(sf::Color::White);
-    playButton.setPosition(300, 250); // Centré dans la fenêtre
+    // Configure le bouton "Paris"
+    parisButton.setFont(font);
+    parisButton.setString("Paris");
+    parisButton.setCharacterSize(40);
+    parisButton.setFillColor(sf::Color::White);
+    parisButton.setPosition(300, 200);
+
+    // Configure le bouton "London"
+    londonButton.setFont(font);
+    londonButton.setString("London");
+    londonButton.setCharacterSize(40);
+    londonButton.setFillColor(sf::Color::White);
+    londonButton.setPosition(300, 300);
+
+    // Configure le bouton "New York"
+    newYorkButton.setFont(font);
+    newYorkButton.setString("New York");
+    newYorkButton.setCharacterSize(40);
+    newYorkButton.setFillColor(sf::Color::White);
+    newYorkButton.setPosition(300, 400);
 }
 
 Menu::~Menu() {}
@@ -33,12 +47,23 @@ void Menu::handle_events() {
 
         if (event.type == sf::Event::MouseButtonPressed) {
             sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-            sf::FloatRect playBounds = playButton.getGlobalBounds();
 
-            // Vérifie si le bouton "Play" est cliqué
-            if (playBounds.contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+            // Vérifie si le bouton "Paris" est cliqué
+            if (parisButton.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
                 window.close(); // Ferme la fenêtre du menu
-                game_window();  // Ouvre la fenêtre de jeu
+                loadMap("paris");
+            }
+
+            // Vérifie si le bouton "London" est cliqué
+            if (londonButton.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                window.close(); // Ferme la fenêtre du menu
+                loadMap("london");
+            }
+
+            // Vérifie si le bouton "New York" est cliqué
+            if (newYorkButton.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+                window.close(); // Ferme la fenêtre du menu
+                loadMap("newyork");
             }
         }
     }
@@ -46,6 +71,13 @@ void Menu::handle_events() {
 
 void Menu::render() {
     window.clear(sf::Color::Black);
-    window.draw(playButton);
+    window.draw(parisButton);
+    window.draw(londonButton);
+    window.draw(newYorkButton);
     window.display();
+}
+
+void Menu::loadMap(const std::string& mapName) {
+    GameApp gameApp;
+    gameApp.run(mapName); // Charge la carte spécifiée
 }
