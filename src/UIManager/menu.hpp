@@ -19,6 +19,8 @@ private:
     sf::Text parisButton;
     sf::Text londonButton;
     sf::Text newYorkButton;
+    sf::Texture backgroundTexture; // Texture pour l'image de fond
+    sf::Sprite backgroundSprite;   // Sprite pour afficher l'image de fond
 
     void loadMap(const std::string& mapName); // Fonction pour charger une carte
 };

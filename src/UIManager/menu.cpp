@@ -2,31 +2,40 @@
 #include "../GameApp.hpp" // Inclure GameApp pour charger les cartes
 #include <iostream>
 
-Menu::Menu() : window(sf::VideoMode(800, 600), "Menu") {
+Menu::Menu() : window(sf::VideoMode(1024, 1024), "Infinite Metro - Menu") {
     if (!font.loadFromFile("assets/font/stocky.ttf")) {
         std::cerr << "Failed to load font!" << std::endl;
     }
+
+    if (!backgroundTexture.loadFromFile("assets/images/background_im.png")) {
+        std::cerr << "Failed to load background image!" << std::endl;
+    }
+    backgroundSprite.setTexture(backgroundTexture);
+
 
     // Configure le bouton "Paris"
     parisButton.setFont(font);
     parisButton.setString("Paris");
     parisButton.setCharacterSize(40);
-    parisButton.setFillColor(sf::Color::White);
-    parisButton.setPosition(300, 200);
+    parisButton.setFillColor(sf::Color::Red); // Change la couleur en jaune
+    float parisX = (window.getSize().x - parisButton.getLocalBounds().width) / 2.0f;
+    parisButton.setPosition(parisX, 300);
 
     // Configure le bouton "London"
     londonButton.setFont(font);
     londonButton.setString("London");
     londonButton.setCharacterSize(40);
-    londonButton.setFillColor(sf::Color::White);
-    londonButton.setPosition(300, 300);
+    londonButton.setFillColor(sf::Color::Red); // Change la couleur en jaune
+    float londonX = (window.getSize().x - londonButton.getLocalBounds().width) / 2.0f;
+    londonButton.setPosition(londonX, 400);
 
     // Configure le bouton "New York"
     newYorkButton.setFont(font);
     newYorkButton.setString("New York");
     newYorkButton.setCharacterSize(40);
-    newYorkButton.setFillColor(sf::Color::White);
-    newYorkButton.setPosition(300, 400);
+    newYorkButton.setFillColor(sf::Color::Red); // Change la couleur en jaune
+    float newYorkX = (window.getSize().x - newYorkButton.getLocalBounds().width) / 2.0f;
+    newYorkButton.setPosition(newYorkX, 500);
 }
 
 Menu::~Menu() {}
@@ -71,6 +80,7 @@ void Menu::handle_events() {
 
 void Menu::render() {
     window.clear(sf::Color::Black);
+    window.draw(backgroundSprite); // Dessine l'image de fond
     window.draw(parisButton);
     window.draw(londonButton);
     window.draw(newYorkButton);
