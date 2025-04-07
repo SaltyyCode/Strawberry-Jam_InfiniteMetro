@@ -52,22 +52,28 @@ void UIManager::loadBackground(const std::string& path, const sf::RenderWindow& 
     _trainModeButton.setPosition(50.f, 50.f); // Position it appropriately
 }
 
-void UIManager::render(sf::RenderWindow& window, const std::vector<Station>& stations, const std::vector<Line>& lines, int selectedLineIndex, bool isPaused, bool isMuted, bool isTrainMode)
+void UIManager::render(sf::RenderWindow& window, const std::vector<Station>& stations, const std::vector<Line>& lines, const std::vector<Train>& trains, int selectedLineIndex, bool isPaused, bool isMuted, bool isTrainMode)
 {
     window.draw(_bgSprite);
     window.draw(_titleText);
 
-    for (const auto& line : lines){
+    for (const auto& line : lines) {
         line.render(window, stations);
     }
 
     for (const auto& station : stations) {
-            station.render(window);
+        station.render(window);
     }
 
+    // Render trains
+    for (const auto& train : trains) {
+        train.render(window);
+    }
+
+    // Render line selectors
     float totalWidth = lines.size() * 60.f;
     float startX = (window.getSize().x - totalWidth) / 2.f;
-        
+
     for (size_t i = 0; i < lines.size(); ++i) {
         sf::CircleShape circle(20.f);
         circle.setFillColor(lines[i].getColor());
@@ -76,7 +82,8 @@ void UIManager::render(sf::RenderWindow& window, const std::vector<Station>& sta
         circle.setOutlineColor(sf::Color::Black);
         window.draw(circle);
     }
-        
+
+    // Render menu and buttons
     float x = 20.f, y = 20.f;
     for (int i = 0; i < 3; ++i) {
         sf::RectangleShape bar(sf::Vector2f(30.f, 4.f));

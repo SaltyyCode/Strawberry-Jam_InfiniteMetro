@@ -29,6 +29,7 @@ public:
     void handleMouseReleased(sf::Vector2f mousePos);
     void renderLinePreview(sf::RenderWindow& window, sf::Vector2f currentMousePos) const;
     void render(sf::RenderWindow& window);
+    const std::vector<Train>& getTrains() const { return _trains; }
 
     void update();
     void updateStations();

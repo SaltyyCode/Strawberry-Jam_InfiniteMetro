@@ -4,14 +4,15 @@
 #include <vector>
 #include "../Station/Station.hpp"
 #include "../Line/Line.hpp"
+#include "../Train/Train.hpp"
 
 class UIManager {
 public:
-    UIManager(); // Constructeur par défaut
-    UIManager(int stationCount); // Nouveau constructeur avec un argument
+    UIManager(); // Default constructor
+    UIManager(int stationCount); // New constructor with an argument
     void loadBackground(const std::string& path, const sf::RenderWindow& window, const std::string& cityName);
     bool isClickOnTrainModeButton(sf::Vector2f pos) const;
-    void render(sf::RenderWindow& window, const std::vector<Station>& stations, const std::vector<Line>& lines, int selectedLineIndex, bool isPaused, bool isMuted, bool isTrainMode);
+    void render(sf::RenderWindow& window, const std::vector<Station>& stations, const std::vector<Line>& lines, const std::vector<Train>& trains, int selectedLineIndex, bool isPaused, bool isMuted, bool isTrainMode);
     bool isClickOnMenu(sf::Vector2f pos) const;
     bool isClickOnSettings(sf::Vector2f pos) const;
     bool isClickOnMute(sf::Vector2f pos) const;
