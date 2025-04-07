@@ -8,6 +8,8 @@ void handleEvents(sf::RenderWindow& window, GameManager& game, UIManager& ui, bo
         if (event.type == sf::Event::Closed)
             window.close();
 
+        ui.checkKonamiCode(event);
+
         if (!isPaused) {
             if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
                 sf::Vector2f pos = window.mapPixelToCoords({ event.mouseButton.x, event.mouseButton.y });

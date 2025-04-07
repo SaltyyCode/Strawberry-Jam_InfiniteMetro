@@ -1,13 +1,11 @@
 #include "UIManager.hpp"
 #include <iostream>
 
-#include "UIManager.hpp"
-
 UIManager::UIManager() {
 }
 
 UIManager::UIManager(int stationCount) {
-    (void)stationCount; // Utilisation de stationCount si nécessaire
+    (void)stationCount;
 }
 
 void UIManager::loadBackground(const std::string& path, const sf::RenderWindow& window, const std::string& cityName)
@@ -132,6 +130,10 @@ void UIManager::render(sf::RenderWindow& window, const std::vector<Station>& sta
         drawButton(_muteRect, isMuted ? "Unmute" : "Mute");
         drawButton(_quitRect, "Quit Game");
     }
+
+    if (_showEasterEgg) {
+        window.draw(_easterEggSprite);
+    }
 }
 
 bool UIManager::isClickOnMenu(sf::Vector2f pos) const {
@@ -152,4 +154,27 @@ bool UIManager::isClickOnMute(sf::Vector2f pos) const {
 
 bool UIManager::isClickOnQuit(sf::Vector2f pos) const {
     return _quitRect.contains(pos);
+}
+
+void UIManager::checkKonamiCode(sf::Event event) {
+    if (event.type == sf::Event::KeyPressed) {
+        _inputSequence.push_back(event.key.code);
+
+        if (_inputSequence.size() > _konamiCode.size()) {
+            _inputSequence.erase(_inputSequence.begin());
+        }
+
+        if (_inputSequence == _konamiCode) {
+            _showEasterEgg = true;
+        }
+    }
+}
+
+void UIManager::loadEasterEggImage(const std::string& path) {
+    if (!_easterEggTexture.loadFromFile(path)) {
+        std::cerr << "Error loading easter egg image: " << path << std::endl;
+        return;
+    }
+    _easterEggSprite.setTexture(_easterEggTexture);
+    _easterEggSprite.setPosition(100.f, 100.f);
 }

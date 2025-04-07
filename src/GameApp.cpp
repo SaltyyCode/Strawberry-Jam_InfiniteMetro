@@ -27,6 +27,7 @@ int GameApp::run(const std::string& mapName)
     GameManager game(config.maxStations, config.stationSpawnDelay, config.startLines, config.maxLines, config.maxTrains);
     UIManager ui;
     ui.loadBackground(config.backgroundPath, window, config.name);
+    ui.loadEasterEggImage("assets/images/bdephoenix.png");
 
     while (window.isOpen()) {
         handleEvents(window, game, ui, _isPaused, _isMuted);

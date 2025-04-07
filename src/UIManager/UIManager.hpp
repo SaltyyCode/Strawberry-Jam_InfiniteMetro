@@ -17,6 +17,8 @@ public:
     bool isClickOnSettings(sf::Vector2f pos) const;
     bool isClickOnMute(sf::Vector2f pos) const;
     bool isClickOnQuit(sf::Vector2f pos) const;
+    void checkKonamiCode(sf::Event event);
+    void loadEasterEggImage(const std::string& path);
 
 private:
     sf::Texture _bgTexture;
@@ -30,4 +32,14 @@ private:
     sf::FloatRect _settingsRect = {550.f, 150.f, 180.f, 40.f};
     sf::FloatRect _muteRect     = {550.f, 210.f, 180.f, 40.f};
     sf::FloatRect _quitRect     = {550.f, 270.f, 180.f, 40.f};
+
+    std::vector<sf::Keyboard::Key> _konamiCode = {
+        sf::Keyboard::Up, sf::Keyboard::Up, sf::Keyboard::Down, sf::Keyboard::Down,
+        sf::Keyboard::Left, sf::Keyboard::Right, sf::Keyboard::Left, sf::Keyboard::Right,
+        sf::Keyboard::B, sf::Keyboard::A
+    };
+    std::vector<sf::Keyboard::Key> _inputSequence;
+    sf::Texture _easterEggTexture;
+    sf::Sprite _easterEggSprite;
+    bool _showEasterEgg = false;
 };
